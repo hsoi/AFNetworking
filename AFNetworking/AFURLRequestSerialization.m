@@ -238,7 +238,9 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
 
     self.mutableObservedChangedKeyPaths = [NSMutableSet set];
     for (NSString *keyPath in AFHTTPRequestSerializerObservedKeyPaths()) {
-        [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:AFHTTPRequestSerializerObserverContext];
+        if ([self respondsToSelector:@selector(keyPath)]) {
+            [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:AFHTTPRequestSerializerObserverContext];
+        }
     }
 
     return self;
@@ -1178,7 +1180,7 @@ typedef enum {
 @implementation AFJSONRequestSerializer
 
 + (instancetype)serializer {
-    return [self serializerWithWritingOptions:0];
+    return [self serializerWithWritingOptions:(NSJSONWritingOptions)0];
 }
 
 + (instancetype)serializerWithWritingOptions:(NSJSONWritingOptions)writingOptions
